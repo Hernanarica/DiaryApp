@@ -2,21 +2,27 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { ExclamationCircleIcon, PhotoIcon } from '@heroicons/react/24/outline';
-import { uploadFile } from '../../helpers/uploadFile';
 import { createNoteThunk, updateNoteThunk } from '../../state/thunks';
+import { createNoteAdapter } from '../../adapters/createNoteAdapter';
 
 export function ActiveNote({ title, description, id }) {
 	const dispatch = useDispatch();
 	const { activeNote } = useSelector(state => state.note);
-	const { handleSubmit, register, setValue, formState: { errors } } = useForm();
+	const { handleSubmit, register, setValue, formState: { errors } } = useForm({
+		defaultValues: {
+			image: null
+		}
+	});
 	
 	useEffect(()=> {
 		setValue('title', title);
 		setValue('description', description);
 	}, [ title, description ]);
 	
-	const onSubmit = note => {
-		activeNote ? dispatch(updateNoteThunk({ ...note, id, image })) : dispatch(createNoteThunk(note));
+	const onSubmit = async (note) => {
+		const adaptedNote = await createNoteAdapter(note);
+		
+		activeNote ? dispatch(updateNoteThunk({ ...adaptedNote, id })) : dispatch(createNoteThunk(adaptedNote));
 	}
 	
 	return (
@@ -86,9 +92,7 @@ export function ActiveNote({ title, description, id }) {
 										type="file"
 										id="image"
 										className="sr-only"
-										{ ...register('image', {
-											required: 'La imagen es obligatoria'
-										}) }
+										{ ...register('image') }
 									/>
 									
 								</div>

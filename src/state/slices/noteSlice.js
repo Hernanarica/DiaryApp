@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { notesTypes, noteTypes } from '../../types/notes';
+import { notesTypes } from '../../types/notes';
 
 const initialState = {
 	status: {
@@ -18,7 +18,7 @@ export const noteSlice = createSlice({
 			state.notes.push(payload);
 		},
 		updateNote: (state, { payload }) => {
-			state.notes = state.notes.map( note => note.id === payload.id ? ({ ...payload }) : note);
+			state.notes = state.notes.map(note => note.id === payload.id ? ({ ...payload }) : note);
 		},
 		deleteNote: (state, { payload }) => {
 			state.notes.splice(state.notes.findIndex(note => note.id === payload), 1);

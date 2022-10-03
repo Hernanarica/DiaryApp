@@ -15,9 +15,9 @@ export const createNoteThunk = (note) => {
 			dispatch(changeStatusNote(noteTypes.checking));
 			await Swal.showLoading(Swal.getDenyButton());
 			
-			const noteCreatedWithId = await createNoteHelper(note);
+			const noteWithId = await createNoteHelper(note);
 			
-			dispatch(createNote(noteCreatedWithId));
+			dispatch(createNote(noteWithId));
 			
 			dispatch(changeStatusNote(noteTypes.create));
 			
@@ -34,10 +34,9 @@ export const updateNoteThunk = (newNote) => {
 			dispatch(changeStatusNote(noteTypes.checking));
 			await Swal.showLoading(Swal.getDenyButton());
 			
-			await updateNoteHelper(newNote);
+			const adaptedNote = await updateNoteHelper(newNote);
 			
-			console.log(newNote);
-			dispatch(updateNote(newNote));
+			dispatch(updateNote(adaptedNote));
 			
 			dispatch(changeStatusNote(noteTypes.update));
 			
@@ -58,6 +57,8 @@ export const deleteNoteThunk = (id) => {
 	return async (dispatch) => {
 		try {
 			dispatch(changeStatusNote(noteTypes.checking));
+			
+			await Swal.showLoading(Swal.getDenyButton());
 			
 			await deleteDocumentHelper(getNotePathHelper(id));
 			dispatch(deleteNote(id));

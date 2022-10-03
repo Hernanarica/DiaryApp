@@ -1,32 +1,24 @@
-import { auth, db } from '../config';
 import { addDoc, collection, updateDoc, doc } from 'firebase/firestore';
-import { getNotesCollection } from './notesHelper';
 import moment from 'moment';
+import { auth, db } from '../config';
 import { uploadFile } from './uploadFile';
+import { getNotesCollection } from './notesHelper';
+import { createNoteAdapter } from '../adapters/createNoteAdapter';
 
 /**
  * It creates a new note in the database
  */
 export const createNoteHelper = async (note) => {
 	try {
-		const image = await uploadFile(note.image[0]);
-		
 		const docRef = await addDoc(collection(db, getNotesCollection()), {
-			...note,
-			image,
-			date: null,
-			id: null
+			...note
 		});
 		
-		const id = docRef.id
-		const date = moment().format('MMM D YYYY');
+		const id = docRef.id;
 		
-		await updateDoc(docRef, {
-			id,
-			date
-		});
+		await updateDoc(docRef, { id });
 		
-		return { ...note, id, date, image }
+		return { ...note, id };
 		
 	} catch (err) {
 		throw new Error(err.message);
@@ -35,11 +27,15 @@ export const createNoteHelper = async (note) => {
 
 export const updateNoteHelper = async (newNote) => {
 	try {
+		// const adaptedNote = await createNoteAdapter(newNote);
+		
 		const docRef = doc(db, getNotePathHelper(newNote.id));
 		
 		// delete newNote.id;
 		
 		await updateDoc(docRef, { ...newNote });
+		
+		return newNote;
 		
 	} catch (err) {
 		throw new Error(err.message);

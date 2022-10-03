@@ -25,7 +25,7 @@ export function SideBar() {
 	return (
 		<>
 			<div className="col-span-1 p-2">
-				<ul className="h-[calc(100vh-104px)] overflow-y-scroll">
+				<ul className="h-[calc(100vh-104px)] overflow-y-scroll" id="sidebar">
 					{
 						notes?.map(note => (
 							<li
