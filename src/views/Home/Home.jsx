@@ -1,8 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { useDispatch } from 'react-redux';
 import { MyDiary } from '../../components/Home/MyDiary';
-import { auth, db } from '../../config';
-import { setNotes } from '../../state/slices';
+import { auth } from '../../config';
 import { deleteNotesThunk } from '../../state/thunks';
 
 export function Home() {
@@ -39,7 +37,6 @@ export function Home() {
 					<p className="text-white font-semibold">DiaryApp</p>
 				</div>
 			</div>
-			
 			<MyDiary />
 		</>
 	);
